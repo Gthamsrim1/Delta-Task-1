@@ -221,7 +221,7 @@ Array.from(circles).forEach(circle => {
             }
         }
             if (circle.id == players[player]) {
-                if (selected) {
+                if (selected == circle) {
                     selected = null
                 } else {
                     selected = circle;
