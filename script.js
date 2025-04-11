@@ -127,6 +127,8 @@ function toggleCircleCursor(enable) {
 
 let selected = null;
 let gameOver = 0;
+let unlocked = 0;
+let inner = 0;
 
 const completionCheck = () => {
     let hex3 = document.querySelector(".hex3");
@@ -174,18 +176,38 @@ const changeTime = () => {
 
 changeTime();
 
+const checkUnlocked = () => {
+    if (unlocked) return;
+    if (redTitans.length + blueTitans.length >= 6) unlocked = 1;
+}
+
 Array.from(circles).forEach(circle => {
     circle.addEventListener("click", () => {
-        if (redTitans.length + blueTitans.length < 8) {
-            if (!circle.id) {
+        if (!player ? redTitans.length < 4 : blueTitans.length < 4) {
+            if (selected && !circle.id && !connections[selected.getAttribute("key")].includes(circle.getAttribute("key"))) {
+                selected = null;
+            }
+            if (!circle.id && !selected) {
                 if (circle.getAttribute("key")[0] == "1") {
                 circle.id = players[player];
                 player ? blueTitans.push(circle.getAttribute("key")) : redTitans.push(circle.getAttribute("key"));
                 player = (player + 1) % 2;
+                checkUnlocked();
                 changeTime();
                 updateScoreDisplay();
                 } else if (circle.getAttribute("key")[0] == "2") {
-                    if (redTitans.length + blueTitans.length >= 6) {
+                    if (unlocked) {
+                        circle.id = players[player];
+                        player ? blueTitans.push(circle.getAttribute("key")) : redTitans.push(circle.getAttribute("key"));
+                        player = (player + 1) % 2;
+                        changeTime();
+                        updateScoreDisplay();
+                        if (redTitans.length + blueTitans.length == 8) {
+                            toggleCircleCursor(true)
+                        }
+                    }
+                } else {
+                    if (inner) {
                         circle.id = players[player];
                         player ? blueTitans.push(circle.getAttribute("key")) : redTitans.push(circle.getAttribute("key"));
                         player = (player + 1) % 2;
@@ -197,24 +219,50 @@ Array.from(circles).forEach(circle => {
                     }
                 }
             }
-        } else {
+        }
             if (circle.id == players[player]) {
-                selected = circle;
-                console.log(selected.getAttribute("key"));
+                if (selected) {
+                    selected = null
+                } else {
+                    selected = circle;
+                    console.log(selected.getAttribute("key"));
+                }
             } else {
                 if (selected && connections[selected.getAttribute("key")].includes(circle.getAttribute("key")) && !circle.id) {
-                    circle.id = players[player];
-                    selected.id = "";
-                    selected = null;
-                    player = (player + 1) % 2;
-                    changeTime();
-                    toggleCircleCursor(true)
-                    updateScoreDisplay();
-                    completionCheck();
+                    if (circle.getAttribute("key")[0] == "1") {
+                        circle.id = players[player];
+                        selected.id = "";
+                        selected = null;
+                        player = (player + 1) % 2;
+                        changeTime();
+                        toggleCircleCursor(true)
+                        updateScoreDisplay();
+                        completionCheck();
+                    } else if (circle.getAttribute("key")[0] == "2") {
+                        if (unlocked) {
+                            circle.id = players[player];
+                            selected.id = "";
+                            selected = null;
+                            player = (player + 1) % 2;
+                            changeTime();
+                            toggleCircleCursor(true)
+                            updateScoreDisplay();
+                            completionCheck();
+                        }
+                    } else {
+                        if (inner) {
+                            circle.id = players[player];
+                            selected.id = "";
+                            selected = null;
+                            player = (player + 1) % 2;
+                            changeTime();
+                            toggleCircleCursor(true)
+                            updateScoreDisplay();
+                            completionCheck();
+                        }
+                    }
                 }
             }
-        }
-
         calcScore();
     })
 });
