@@ -58,24 +58,24 @@ document.querySelectorAll('.hex').forEach((hex, hexIndex) => {
         let left = 0;
 
         if (hexIndex === 0) {
-            translateX = "calc(17.2vh + 10.3vw)";
-            left = "64"
+            translateX = "calc(12.814vh + 12.534vw)";
+            left = "calc(3.6vh + 3.53vw)"
         } else if (hexIndex === 1) {
-            translateX = "calc(10.39vh + 6.24vw)";
-            left = "48"
+            translateX = "calc(7.688vh + 7.52vw)";
+            left = "calc(2.13vh + 2.08vw)"
         } else {
-            translateX = "calc(5.2vh + 3.4vw)";
-            left = "32"
+            translateX = "calc(3.844vh + 3.76vw)";
+            left = "calc(1.75vh + 1.711vw)"
         }
 
         para.style.position = "absolute";
-        para.style.left = `${left}px`
-        para.style.top = `-35px`
+        para.style.left = `${left}`
+        para.style.top = `calc(-2.6009vh - 1.0425vw)`
         para.style.transform = `translateX(${translateX}) rotate(-${60 * i + 330}deg)`;
         para.style.color = `rgba(220, 220, 255, 0.9)`;
         para.style.textShadow = "0 0 20px rgba(150, 150, 255, 0.6)";
         para.style.fontWeight = '500'
-        para.style.fontSize = '16.5px'
+        para.style.fontSize = 'calc(1.51744vh + 0.353039vw)'
 
         div.appendChild(para)
 
@@ -180,6 +180,9 @@ const checkUnlocked = () => {
     if (unlocked) return;
     if (redTitans.length + blueTitans.length >= 6) unlocked = 1;
 }
+
+console.log(window.innerHeight)
+console.log(window.innerWidth)
 
 Array.from(circles).forEach(circle => {
     circle.addEventListener("click", () => {
