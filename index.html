@@ -119,54 +119,10 @@
     </div>
 
     <script>
-        const numStars = 200; 
-        const maxWidth = 2*window.innerWidth;
-        const maxHeight = 2*window.innerHeight;
-        
-        const stars1 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        const stars2 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        const stars3 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        const stars4 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        
-        document.getElementById('stars1').style.setProperty('--stars1', stars1.join(', '));
-        document.getElementById('stars2').style.setProperty('--stars2', stars2.join(', '));
-        document.getElementById('stars3').style.setProperty('--stars3', stars3.join(', '));
-        document.getElementById('stars4').style.setProperty('--stars4', stars4.join(', '));
-
-        const titleBox = document.getElementsByClassName("title")[0];
-        const letters = titleBox.querySelectorAll("p");
-
-        letters.forEach((letter, index) => {
-            setTimeout(() => {
-                letter.classList.add("animate");
-            }, index * 150);
-        });
-
-        const start_click = () => {
-            const overlay = document.getElementById("black-overlay");
-            overlay.style.opacity = 1;
-            overlay.style.pointerEvents = "all";
-
-            setTimeout(() => {
-                window.location.href = "index.html";
-            }, 1000);
-        }
-  </script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const overlay = document.getElementById("black-overlay");
+        overlay.style.opacity = 0;
+      });
+    </script>
   </body>
 </html>
