@@ -588,7 +588,7 @@ Array.from(circles).forEach(circle => {
             }
         }
             if (circle.id == players[player]) {
-                if (selected == circle) {
+                if (selected == circle == circle) {
                     selected.style.boxShadow = `0 0 15px rgba(255, 255, 255, 0.6)`;
                     selected = null
                 } else {
