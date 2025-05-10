@@ -390,8 +390,6 @@ const completionCheck = () => {
         }
     }
 
-    redTime = 0;
-
     if (sum >= 6 || redTime == 0 || blueTime == 0) {
         let gameOver = document.createElement("div");
         gameOver.style.position = "absolute";
