@@ -3,75 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <style>
-        #stars1::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1px;
-            height: 1px;
-            background: transparent;
-            box-shadow: var(--stars1);
-            animation: starUp 50s linear infinite;
-        }
-
-        #stars2::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 2px;
-            height: 2px;
-            background: transparent;
-            box-shadow: var(--stars2);
-            animation: starUp 100s linear infinite;
-        }
-
-        #stars3::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 3px;
-            background: transparent;
-            box-shadow: var(--stars3);
-            animation: starUp 150s linear infinite;
-        }
-
-        #stars4::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1px;
-            height: 1px;
-            background: transparent;
-            box-shadow: var(--stars4);
-            animation: starUp 600s linear infinite;
-        }
-
-        #black-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1s ease-in-out;
-            z-index: 9999;
-        }
-
-        @keyframes starUp {
-            from {
-                transform: translateY(0px);
-            }
-            to {
-                transform: translateY(-2000px);
-            }
-        }
+      #black-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        z-index: 9999;
+        opacity: 1;
+        pointer-events: none;
+        transition: opacity 1s ease-in-out;
+      }
     </style>
     <link rel="icon" type="image/svg+xml" href="/delta-removebg-preview.png" />
     <link rel="stylesheet" href="styles.css" />
@@ -81,92 +24,161 @@
   <body>
     <div id="black-overlay"></div>
 
-    <div class="anim">
-        <div id='stars1'></div>
-        <div id='stars2'></div>
-        <div id='stars3'></div>
-        <div id='stars4'></div>
-    </div>
+    <div class="main">
 
-    <div class="slanted-box">
-
-    </div>
-
-    <div class="screen">
-        <div class="start">
-            <div class="title">
-                <div class="title1">
-                  <p>T</p>
-                  <p>I</p>
-                  <p>T</p>
-                  <p>A</p>
-                  <p>N</p>
-                  <p>'S</p>
-                </div>
-                <div class="title1">
-                  <p>C</p>
-                  <p>I</p>
-                  <p>R</p>
-                  <p>C</p>
-                  <p>U</p>
-                  <p>I</p>
-                  <p>T</p>
-                </div>
-            </div>
-            <button onclick="start_click()" class="play-btn">Play</button>
-            <button onclick="alert('Obviously it does not work due to security reasons or whatever.')" class="quit-btn">Quit</button>
+      <div class="hex hex1">
+        <div class="a" style="transform: rotate(0deg)">
+          <div class="circle"></div>
+          <div
+            class="line"
+            style="transform: translateX(calc(12.814vh + 12.534vw)) rotate(30deg)"
+          ></div>
         </div>
+        <div class="a" style="transform: rotate(60deg)">
+          <div class="circle"></div>
+          <div
+            class="line"
+            style="transform: translateX(calc(12.814vh + 12.534vw)) rotate(30deg)"
+          ></div>
+          <div class="line connecta" ></div>
+        </div>
+        <div class="a" style="transform: rotate(120deg)">
+          <div class="circle"></div>
+          <div
+            class="line"
+            style="transform: translateX(calc(12.814vh + 12.534vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(180deg)">
+          <div class="circle"></div>
+          <div
+            class="line"
+            style="transform: translateX(calc(12.814vh + 12.534vw)) rotate(30deg)"
+          ></div>
+          <div class="line connecta" ></div>
+        </div>
+        <div class="a" style="transform: rotate(240deg)">
+          <div class="circle"></div>
+          <div
+            class="line"
+            style="transform: translateX(calc(12.814vh + 12.534vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(300deg)">
+          <div class="circle"></div>
+          <div class="line connecta" ></div>
+        </div>
+        <div class="a1" style="transform: rotate(300deg); z-index: -1; position: absolute;">
+          <div
+            class="line"
+            style="transform: translateX(calc(11.098vh + 10.855vw)) rotate(30deg); position: absolute;"
+          ></div>
+        </div>
+      </div>
+
+      <div class="hex hex2">
+        <div class="a" style="transform: rotate(0deg)">
+          <div class="circle small" style="z-index: 1;"></div>
+          <div
+            class="line small"
+            style="transform: translateX(calc(7.688vh + 7.52vw)) rotate(30deg)"
+          ></div>
+          <div class="line connectb" ></div>
+        </div>
+        <div class="a" style="transform: rotate(60deg)">
+          <div class="circle small" style="z-index: 1;"></div>
+          <div
+            class="line small"
+            style="transform: translateX(calc(7.688vh + 7.52vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(120deg)">
+          <div class="circle small"></div>
+          <div
+            class="line small"
+            style="transform: translateX(calc(7.688vh + 7.52vw)) rotate(30deg)"
+          ></div>
+          <div class="line connectb" ></div>
+        </div>
+        <div class="a" style="transform: rotate(180deg)">
+          <div class="circle small"></div>
+          <div
+            class="line small"
+            style="transform: translateX(calc(7.688vh + 7.52vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(240deg)">
+          <div class="circle small"></div>
+          <div
+            class="line small"
+            style="transform: translateX(calc(7.688vh + 7.52vw)) rotate(30deg)"
+          ></div>
+          <div class="line connectb" ></div>
+        </div>
+        <div class="a" style="transform: rotate(300deg)">
+          <div class="circle small"></div>
+        </div>
+        <div class="a1" style="transform: rotate(300deg); z-index: -1; position: absolute;">
+          <div
+            class="line small"
+            style="transform: translateX(calc(7vh + 5.64vw)) rotate(30deg); position: absolute;"
+          ></div>
+        </div>
+      </div>
+
+      <div class="hex hex3">
+        <div class="a" style="transform: rotate(0deg)">
+          <div class="circle tiny"></div>
+          <div
+            class="line tiny"
+            style="transform: translateX(calc(3.844vh + 3.76vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(60deg)">
+          <div class="circle tiny"></div>
+          <div
+            class="line tiny"
+            style="transform: translateX(calc(3.844vh + 3.76vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(120deg)">
+          <div class="circle tiny"></div>
+          <div
+            class="line tiny"
+            style="transform: translateX(calc(3.844vh + 3.76vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(180deg)">
+          <div class="circle tiny"></div>
+          <div
+            class="line tiny"
+            style="transform: translateX(calc(3.844vh + 3.76vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(240deg)">
+          <div class="circle tiny"></div>
+          <div
+            class="line tiny"
+            style="transform: translateX(calc(3.844vh + 3.76vw)) rotate(30deg)"
+          ></div>
+        </div>
+        <div class="a" style="transform: rotate(300deg)">
+          <div class="circle tiny"></div>
+        </div>
+        <div class="a1" style="transform: rotate(300deg); z-index: -1; position: absolute;">
+          <div
+            class="line tiny"
+            style="transform: translateX(calc(4.5vh + 2.7vw)) rotate(30deg); top: 2vh; left: -2.5vh; position: absolute; height: calc(4.439vh + 4.342vw);"
+          ></div>
+        </div>
+      </div>
     </div>
-
+    <script src="Delta-Task-1/script.js"></script>
     <script>
-        const numStars = 200; 
-        const maxWidth = 2*window.innerWidth;
-        const maxHeight = 2*window.innerHeight;
-        
-        const stars1 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        const stars2 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        const stars3 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        const stars4 = Array.from({ length: numStars }, () => {
-          const x = Math.floor(Math.random() * maxWidth);
-          const y = Math.floor(Math.random() * maxHeight);
-          return `${x}px ${y}px #FFF`;
-        });
-        
-        document.getElementById('stars1').style.setProperty('--stars1', stars1.join(', '));
-        document.getElementById('stars2').style.setProperty('--stars2', stars2.join(', '));
-        document.getElementById('stars3').style.setProperty('--stars3', stars3.join(', '));
-        document.getElementById('stars4').style.setProperty('--stars4', stars4.join(', '));
-
-        const titleBox = document.getElementsByClassName("title")[0];
-        const letters = titleBox.querySelectorAll("p");
-
-        letters.forEach((letter, index) => {
-            setTimeout(() => {
-                letter.classList.add("animate");
-            }, index * 150);
-        });
-
-        const start_click = () => {
-            const overlay = document.getElementById("black-overlay");
-            overlay.style.opacity = 1;
-            overlay.style.pointerEvents = "all";
-
-            setTimeout(() => {
-                window.location.href = "index.html";
-            }, 1000);
-        }
-  </script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const overlay = document.getElementById("black-overlay");
+        overlay.style.opacity = 0;
+      });
+    </script>
   </body>
 </html>
