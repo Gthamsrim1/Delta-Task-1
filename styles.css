@@ -147,7 +147,7 @@ body {
   linear-gradient(217deg, rgba(89, 40, 99, 0.8), rgba(212, 0, 255, 0.2) 70.71%),
   linear-gradient(127deg, rgba(57, 18, 90, 0.8), rgba(140, 0, 255, 0.2) 70.71%),
   linear-gradient(336deg, rgba(0, 0, 255, 0.8), rgba(0, 0, 255, 0.2) 70.71%);
-    border: indigo 2px;
+    border: rgba(255, 255, 255, 0.2) solid 10px;
     height: 60vh;
     width: 40vw;
     border-radius: calc(2vh + 1vw);
