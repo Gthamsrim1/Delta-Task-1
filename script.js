@@ -37,6 +37,7 @@ let dragOffsetX = 0;
 let dragOffsetY = 0;
 let game = 0;
 let game_history = [];
+let completed = 0;
 
 let hexScores = [];
 let connectScores = [];
@@ -392,6 +393,7 @@ const completionCheck = () => {
     }
 
     if (sum >= 6 || redTime == 0 || blueTime == 0) {
+        completed = 1;
         let gameOver = document.createElement("div");
         gameOver.style.position = "absolute";
         gameOver.style.background = "rgba(0, 0, 0, 0.6)"
@@ -507,14 +509,14 @@ const calcScore = () => {
 
 const changeTime = () => {
     const redTimer = () => {
-        if (!redTime || player) return;
+        if (!redTime || player || completed) return;
         redTime -= 1;
         updateScoreDisplay();
         completionCheck();
         setTimeout(redTimer, 1000);
     }
     const blueTimer = () => {
-        if (!blueTime || !player) return;
+        if (!blueTime || !player || completed) return;
         blueTime -= 1;
         updateScoreDisplay();
         completionCheck();
