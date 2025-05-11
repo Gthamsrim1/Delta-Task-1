@@ -442,7 +442,7 @@ const restart_click =  () => {
     }, 1000);
 }
 
-const calcScore = () => {
+const calcScore = async () => {
     let visitedPairs = new Set();
     
     const getScore = (redTitan, n) => {
@@ -512,14 +512,24 @@ const changeTime = () => {
         if (!redTime || player || completed) return;
         redTime -= 1;
         updateScoreDisplay();
-        completionCheck();
+        async function runChecks() {
+            await calcScore();
+            completionCheck();
+        }
+
+        runChecks();
         setTimeout(redTimer, 1000);
     }
     const blueTimer = () => {
         if (!blueTime || !player || completed) return;
         blueTime -= 1;
         updateScoreDisplay();
-        completionCheck();
+        async function runChecks() {
+            await calcScore();
+            completionCheck();
+        }
+
+        runChecks();
         setTimeout(blueTimer, 1000);
     }
 
@@ -640,8 +650,12 @@ Array.from(circles).forEach(circle => {
                         changeTime();
                         toggleCircleCursor(true)
                         updateScoreDisplay();
-                        calcScore();
-                        completionCheck();
+                        async function runChecks() {
+                            await calcScore();
+                            completionCheck();
+                        }
+
+                        runChecks();
                     } else if (circle.getAttribute("key")[0] == "2") {
                         if (unlocked) {
                             circle.id = players[player];
@@ -653,8 +667,13 @@ Array.from(circles).forEach(circle => {
                             changeTime();
                             toggleCircleCursor(true)
                             updateScoreDisplay();
-                            calcScore();
-                            completionCheck();
+
+                            async function runChecks() {
+                                await calcScore();
+                                completionCheck();
+                            }
+
+                            runChecks();
                         }
                     } else {
                         if (inner) {
@@ -667,8 +686,12 @@ Array.from(circles).forEach(circle => {
                             changeTime();
                             toggleCircleCursor(true)
                             updateScoreDisplay();
-                            calcScore();
-                            completionCheck();
+                            async function runChecks() {
+                                await calcScore();
+                                completionCheck();
+                            }
+
+                            runChecks();
                         }
                     }
 

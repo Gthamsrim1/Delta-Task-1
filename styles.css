@@ -213,7 +213,7 @@ body {
     animation: moveRedRight, Jump;
     animation-duration: 2s, 1.5s; 
     animation-delay: 0.5s, 3s;
-    animation-iteration-count: 1, infinite;
+    animation-iteration-count: forwards, infinite;
     animation-timing-function: ease-in-out, ease-in-out;
 }
 
@@ -222,7 +222,7 @@ body {
     animation: moveBlueLeft, Jump;
     animation-duration: 2s, 1.5s; 
     animation-delay: 0.5s, 3s;
-    animation-iteration-count: 1, infinite;
+    animation-iteration-count: forwards, infinite;
     animation-timing-function: ease-in-out, ease-in-out;
 }
 
