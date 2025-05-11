@@ -36,6 +36,7 @@ let dragging = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 let game = 0;
+let game_history = [];
 
 let hexScores = [];
 let connectScores = [];
@@ -442,9 +443,18 @@ const restart_click =  () => {
 const calcScore = () => {
     let visitedPairs = new Set();
     
-    const getScore = (redTitan) => {
-        let [i, j] = redTitan.split("-").map(Number);
-    return hexScores[i - 1][j];
+    const getScore = (redTitan, n) => {
+        if (n) {
+            let [i, j] = redTitan.split("-").map(Number);
+            if (j % 2 == 0) {
+                return connectScores[i - 1][((j / 2) + 2) % 3]
+            } else {
+                return connectScores[i - 1][(((j - 1) / 2) + 2) % 3]
+            }
+        } else {
+            let [i, j] = redTitan.split("-").map(Number);
+            return hexScores[i - 1][j];
+        }
     }
 
     redScore = 0;
@@ -458,7 +468,14 @@ const calcScore = () => {
                     let pair = sorted.join(" -> ");
                     if (!visitedPairs.has(pair)) {
                         visitedPairs.add(pair);
-                        redScore += getScore(sorted[1][2] != '5' || sorted[0][2] != '0' ? sorted[1] : sorted[0]);
+                        redScore += getScore(sorted[1][2] != '5' || sorted[0][2] != '0' ? sorted[1] : sorted[0], 0);
+                    }
+                } else {
+                    let sorted = [redTitan, neighbour].sort();
+                    let pair = sorted.join(" -> ");
+                    if (!visitedPairs.has(pair)) {
+                        visitedPairs.add(pair);
+                        redScore += getScore(sorted[0], 1)
                     }
                 }
             }
@@ -475,6 +492,13 @@ const calcScore = () => {
                         visitedPairs.add(pair);
                         blueScore += getScore(sorted[1][2] != '5' || sorted[0][2] != '0' ? sorted[1] : sorted[0]);
                     }
+                } else {
+                    let sorted = [blueTitan, neighbour].sort();
+                    let pair = sorted.join(" -> ");
+                    if (!visitedPairs.has(pair)) {
+                        visitedPairs.add(pair);
+                        blueScore += getScore(sorted[0], 1)
+                    }
                 }
             }
         }
@@ -486,12 +510,14 @@ const changeTime = () => {
         if (!redTime || player) return;
         redTime -= 1;
         updateScoreDisplay();
+        completionCheck();
         setTimeout(redTimer, 1000);
     }
     const blueTimer = () => {
         if (!blueTime || !player) return;
         blueTime -= 1;
         updateScoreDisplay();
+        completionCheck();
         setTimeout(blueTimer, 1000);
     }
 
@@ -553,15 +579,18 @@ Array.from(circles).forEach(circle => {
                 if (circle.getAttribute("key")[0] == "1") {
                 circle.id = players[player];
                 player ? blueTitans.add(circle.getAttribute("key")) : redTitans.add(circle.getAttribute("key"));
+                game_history.push(players[player] + " PLACE   " + circle.getAttribute("key"))
                 player = (player + 1) % 2;
                 checkUnlocked();
                 changeTime();
                 calcScore();
                 updateScoreDisplay();
+                console.log(game_history);
                 } else if (circle.getAttribute("key")[0] == "2") {
                     if (unlocked) {
                         circle.id = players[player];
                         player ? blueTitans.add(circle.getAttribute("key")) : redTitans.add(circle.getAttribute("key"));
+                        game_history.push(players[player] + " PLACE   " + circle.getAttribute("key"))
                         player = (player + 1) % 2;
                         changeTime();
                         calcScore();
@@ -574,6 +603,7 @@ Array.from(circles).forEach(circle => {
                     if (inner) {
                         circle.id = players[player];
                         player ? blueTitans.add(circle.getAttribute("key")) : redTitans.add(circle.getAttribute("key"));
+                        game_history.push(players[player] + " PLACE   " + circle.getAttribute("key"))
                         player = (player + 1) % 2;
                         changeTime();
                         calcScore();
@@ -601,6 +631,7 @@ Array.from(circles).forEach(circle => {
                     if (circle.getAttribute("key")[0] == "1") {
                         circle.id = players[player];
                         selected.id = "";
+                        game_history.push(players[player] + " MOVE   " + selected.getAttribute("key") + " -> " + circle.getAttribute("key"))
                         updateTitans(circle, selected);
                         selected = null;
                         player = (player + 1) % 2;
@@ -613,6 +644,7 @@ Array.from(circles).forEach(circle => {
                         if (unlocked) {
                             circle.id = players[player];
                             selected.id = "";
+                            game_history.push(players[player] + " MOVE   " + selected.getAttribute("key") + " -> " + circle.getAttribute("key"))
                             updateTitans(circle, selected);
                             selected = null;
                             player = (player + 1) % 2;
@@ -626,6 +658,7 @@ Array.from(circles).forEach(circle => {
                         if (inner) {
                             circle.id = players[player];
                             selected.id = "";
+                            game_history.push(players[player] + " MOVE   " + selected.getAttribute("key") + " -> " + circle.getAttribute("key"))
                             updateTitans(circle, selected);
                             selected = null;
                             player = (player + 1) % 2;
