@@ -62,6 +62,31 @@ console.log(hexScores);
 const circles = document.getElementsByClassName("circle");
 const neighbours = {};
 
+let paused = 0;
+
+const togglePause = () => {
+    const overlay = document.getElementById("black-overlay");
+    overlay.style.opacity = `0.5`;
+    overlay.style.pointerEvents = `all`
+    overlay.addEventListener("click", () => {
+        overlay.style.opacity = `0`;
+        overlay.style.pointerEvents = `none`
+        paused = 0;
+        changeTime();
+    })
+    paused = 1;
+}
+
+const restart_click =  () => {
+    const overlay = document.getElementById("black-overlay");
+    overlay.style.opacity = 1;
+    overlay.style.pointerEvents = "all";
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
+
 const scoreDisplay = document.createElement("div");
 scoreDisplay.style.position = "absolute";
 scoreDisplay.style.top = "20px";
@@ -85,6 +110,38 @@ turnIndicator.style.borderRadius = "5px";
 turnIndicator.style.fontSize = "18px";
 turnIndicator.style.zIndex = "100";
 document.body.appendChild(turnIndicator);
+
+const gameControls = document.createElement("div");
+gameControls.style.position = "absolute";
+gameControls.style.top = "80px";
+gameControls.style.right = "20px";
+gameControls.style.padding = "10px";
+gameControls.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+gameControls.style.color = "white";
+gameControls.style.borderRadius = "5px";
+gameControls.style.fontSize = "18px";
+gameControls.style.zIndex = "100";
+gameControls.style.display = "flex";
+gameControls.style.gap = "10px";
+document.body.appendChild(gameControls);
+
+const pausePlayBtn = document.createElement("button");
+pausePlayBtn.innerHTML = `<img src="pause.svg" alt="Pause" width="30" height="30"/>`;
+pausePlayBtn.title = "Pause Game";
+pausePlayBtn.classList.add("game-button-style");
+pausePlayBtn.addEventListener("click", togglePause);
+gameControls.appendChild(pausePlayBtn);
+
+const resetBtn = document.createElement("button");
+resetBtn.innerHTML = `<img src="restart.svg" alt="Restart" width="30" height="30"/>`;
+resetBtn.title = "Reset Game";
+resetBtn.classList.add("game-button-style");
+resetBtn.addEventListener("click", restart_click);
+gameControls.appendChild(resetBtn);
+
+const pauseText = document.createElement("div");
+pauseText.textContent = "GAME PAUSED";
+pauseText.classList.add("pause-text");
 
 const TitansLeft = document.createElement('div');
 TitansLeft.style.position = 'absolute';
@@ -223,9 +280,15 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
+let width = window.innerWidth;
+
+window.addEventListener('resize', function() {
+  width = window.innerWidth;
+});
+
 function updateScoreDisplay() {
     scoreDisplay.innerHTML = `<span style="color: red;">Red: ${redScore}</span> <span style="border-radius: 5px; border-right: 5px solid red; border-bottom: 3px solid red; padding: 6px; margin-left: 4px">${Math.floor(redTime / 60)}:${redTime % 60 < 10 ? 0 : ""}${redTime % 60}</span> <span style="border-radius: 5px; border-left: 5px solid blue; border-top: 3px solid blue; padding: 6px; margin-right: 4px">${Math.floor(blueTime / 60)}:${blueTime % 60 < 10 ? 0 : ""}${blueTime % 60}</span> <span style="color: blue;">Blue: ${blueScore}</span>`;
-    turnIndicator.innerHTML = `Current Turn: <span style="color: ${players[player]};">${players[player].toUpperCase()}</span>`;
+    turnIndicator.innerHTML = `${width < 768 ? "" : "Current Turn: "}<span style="color: ${players[player]};">${players[player].toUpperCase()}</span>`;
     turnIndicator.style.borderLeft = `5px solid ${players[player]}`;
 }
 
@@ -432,16 +495,6 @@ const completionCheck = () => {
     }
 }
 
-const restart_click =  () => {
-    const overlay = document.getElementById("black-overlay");
-    overlay.style.opacity = 1;
-    overlay.style.pointerEvents = "all";
-
-    setTimeout(() => {
-        window.location.reload();
-    }, 1000);
-}
-
 const calcScore = async () => {
     let visitedPairs = new Set();
     
@@ -509,7 +562,7 @@ const calcScore = async () => {
 
 const changeTime = () => {
     const redTimer = () => {
-        if (!redTime || player || completed) return;
+        if (!redTime || player || completed || paused) return;
         redTime -= 1;
         updateScoreDisplay();
         async function runChecks() {
@@ -521,7 +574,7 @@ const changeTime = () => {
         setTimeout(redTimer, 1000);
     }
     const blueTimer = () => {
-        if (!blueTime || !player || completed) return;
+        if (!blueTime || !player || completed || paused) return;
         blueTime -= 1;
         updateScoreDisplay();
         async function runChecks() {
@@ -578,8 +631,144 @@ const updateTitans = (circle, selected) => {
     !player ? redTitans.add(circle.getAttribute("key")) : blueTitans.add(circle.getAttribute("key"));
 }
 
-console.log(window.innerHeight)
-console.log(window.innerWidth)
+const soundUrls = {
+    place: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',
+    move: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',
+    unlock: 'https://assets.mixkit.co/active_storage/sfx/2588/2588-preview.mp3',
+    win: 'https://assets.mixkit.co/active_storage/sfx/1993/1993-preview.mp3'
+};
+
+const audioPool = {
+    place: [],
+    move: [],
+    unlock: [],
+    win: []
+};
+
+const POOL_SIZE = 5;
+
+function initAudioPools() {
+    for (const soundType in soundUrls) {
+        for (let i = 0; i < POOL_SIZE; i++) {
+            const audio = new Audio(soundUrls[soundType]);
+            audio.preload = 'auto';
+            audio.volume = 0.5;
+            audioPool[soundType].push(audio);
+        }
+    }
+}
+
+initAudioPools();
+
+function getNextAudio(poolName) {
+    for (let i = 0; i < audioPool[poolName].length; i++) {
+        if (audioPool[poolName][i].paused || audioPool[poolName][i].ended) {
+            return audioPool[poolName][i];
+        }
+    }
+
+    const newAudio = new Audio(soundUrls[poolName]);
+    newAudio.preload = 'auto';
+    newAudio.volume = 0.5;
+    audioPool[poolName].push(newAudio);
+    return newAudio;
+}
+
+let audioContext = null;
+
+function initAudioContext() {
+    if (!audioContext && (window.AudioContext || window.webkitAudioContext)) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioContext = new AudioContextClass();
+    }
+}
+
+function playTone(frequency, duration, volume) {
+    if (!audioContext) initAudioContext();
+    if (!audioContext) return; 
+    
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.type = 'sine';
+    oscillator.frequency.value = frequency;
+    gainNode.gain.value = volume;
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + duration/1000);
+}
+
+function playPlaceSound() {
+    try {
+        const audio = getNextAudio('place');
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                playTone(440, 150, 0.2);
+            });
+        }
+    } catch (error) {
+        console.log("Using fallback tone for place sound");
+        playTone(440, 150, 0.2);
+    }
+}
+
+function playMoveSound() {
+    try {
+        const audio = getNextAudio('move');
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                playTone(523.25, 150, 0.2);
+            });
+        }
+    } catch (error) {
+        console.log("Using fallback tone for move sound");
+        playTone(523.25, 150, 0.2);
+    }
+}
+
+function playUnlockSound() {
+    try {
+        const audio = getNextAudio('unlock');
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                playTone(659.25, 300, 0.3);
+            });
+        }
+    } catch (error) {
+        console.log("Using fallback tone for unlock sound");
+        playTone(659.25, 300, 0.3);
+    }
+}
+
+function playWinSound() {
+    try {
+        const audio = getNextAudio('win');
+        audio.currentTime = 0;
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                playTone(880, 500, 0.4);
+            });
+        }
+    } catch (error) {
+        console.log("Using fallback tone for win sound");
+        playTone(880, 500, 0.4);
+    }
+}
+
 
 Array.from(circles).forEach(circle => {
     circle.addEventListener("click", () => {
@@ -592,6 +781,7 @@ Array.from(circles).forEach(circle => {
                 circle.id = players[player];
                 player ? blueTitans.add(circle.getAttribute("key")) : redTitans.add(circle.getAttribute("key"));
                 game_history.push(players[player] + " PLACE   " + circle.getAttribute("key"))
+                playPlaceSound();
                 player = (player + 1) % 2;
                 checkUnlocked();
                 changeTime();
@@ -603,6 +793,7 @@ Array.from(circles).forEach(circle => {
                         circle.id = players[player];
                         player ? blueTitans.add(circle.getAttribute("key")) : redTitans.add(circle.getAttribute("key"));
                         game_history.push(players[player] + " PLACE   " + circle.getAttribute("key"))
+                        playPlaceSound();
                         player = (player + 1) % 2;
                         changeTime();
                         calcScore();
@@ -616,6 +807,7 @@ Array.from(circles).forEach(circle => {
                         circle.id = players[player];
                         player ? blueTitans.add(circle.getAttribute("key")) : redTitans.add(circle.getAttribute("key"));
                         game_history.push(players[player] + " PLACE   " + circle.getAttribute("key"))
+                        playPlaceSound();
                         player = (player + 1) % 2;
                         changeTime();
                         calcScore();
@@ -644,6 +836,7 @@ Array.from(circles).forEach(circle => {
                         circle.id = players[player];
                         selected.id = "";
                         game_history.push(players[player] + " MOVE   " + selected.getAttribute("key") + " -> " + circle.getAttribute("key"))
+                        playMoveSound();
                         updateTitans(circle, selected);
                         selected = null;
                         player = (player + 1) % 2;
@@ -661,6 +854,7 @@ Array.from(circles).forEach(circle => {
                             circle.id = players[player];
                             selected.id = "";
                             game_history.push(players[player] + " MOVE   " + selected.getAttribute("key") + " -> " + circle.getAttribute("key"))
+                            playMoveSound();
                             updateTitans(circle, selected);
                             selected = null;
                             player = (player + 1) % 2;
@@ -680,6 +874,7 @@ Array.from(circles).forEach(circle => {
                             circle.id = players[player];
                             selected.id = "";
                             game_history.push(players[player] + " MOVE   " + selected.getAttribute("key") + " -> " + circle.getAttribute("key"))
+                            playMoveSound();
                             updateTitans(circle, selected);
                             selected = null;
                             player = (player + 1) % 2;
