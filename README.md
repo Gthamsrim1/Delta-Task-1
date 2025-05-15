@@ -21,10 +21,10 @@ That's it! You're ready to play.
 
 ## 📂 Project Structure
 
-`├── index.html # Main HTML file
+├── index.html # Main HTML file
 ├── style.css # Game styles
 ├── script.js # Game logic
-└── game.html.js # Game HTML file`
+└── game.html.js # Game HTML file
 
 ## 🛠️ Built With
 
