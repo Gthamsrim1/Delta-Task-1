@@ -180,6 +180,8 @@ const numOfPieces = () => {
         for (let i = 4; i > redTitans.size; i--) {
             let para = document.createElement("div");
             para.classList.add('titans');
+            para.style.width = `38px`;
+            para.style.height = `38px`;
             para.id = "red";
             para.setAttribute("key", 5 - i);
 
@@ -217,6 +219,8 @@ const numOfPieces = () => {
         for (let i = 4; i > blueTitans.size; i--) {
             let para = document.createElement("div");
             para.classList.add('titans');
+            para.style.width = `38px`;
+            para.style.height = `38px`;
             para.id = "blue";
             para.setAttribute("key", 5 - i);
             
